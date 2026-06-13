@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# Jekyll build output and caches
+_site/
+.jekyll-cache/
+.sass-cache/
+.jekyll-metadata
+
+# Ruby dependency folders
+.bundle/
+vendor/bundle/
+vendor/cache/
+vendor/ruby/
+
+# Node tooling, if later added for assets or checks
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test and coverage artifacts
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Local environment files
+.env
+.env.*
+
+# Editor folders
+.idea/
+.vscode/
+*.swp
+*.swo

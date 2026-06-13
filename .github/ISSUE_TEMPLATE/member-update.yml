@@ -1,0 +1,61 @@
+name: 更新成员信息
+description: 新增或修改成员页面中的公开信息
+title: "[成员信息] "
+labels:
+  - content
+  - member-update
+body:
+  - type: input
+    id: name
+    attributes:
+      label: 姓名
+      placeholder: 例如：张三
+    validations:
+      required: true
+  - type: input
+    id: cohort
+    attributes:
+      label: 入组或入学年份
+      placeholder: 例如：2024
+  - type: dropdown
+    id: status
+    attributes:
+      label: 状态
+      options:
+        - 在组
+        - 已毕业
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: research
+    attributes:
+      label: 研究方向关键词
+      placeholder: 例如：多智能体系统、强化学习、机器学习系统
+  - type: textarea
+    id: contact_topics
+    attributes:
+      label: 可交流主题
+      placeholder: 例如：开题准备、论文投稿、毕业流程、实习求职
+  - type: dropdown
+    id: open_to_contact
+    attributes:
+      label: 是否愿意公开连接入口
+      options:
+        - 是
+        - 否
+    validations:
+      required: true
+  - type: textarea
+    id: public_contact
+    attributes:
+      label: 可公开联系方式
+      description: 建议填写 GitHub、个人主页、学术主页或经过处理的邮箱；不要填写手机号、微信号等敏感信息
+      placeholder: 例如：GitHub: example-student
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: 公开确认
+      options:
+        - label: 我确认以上信息可以公开展示，或我已获得本人同意。
+          required: true

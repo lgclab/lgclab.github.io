@@ -1,0 +1,34 @@
+- name: "张三"
+  cohort: "2024"
+  role: "硕士"
+  status: "在组"
+  research:
+    - "多智能体系统"
+    - "强化学习"
+  current: "课题组"
+  open_to_contact: true
+  contact_topics:
+    - "入组前三个月怎么启动"
+    - "论文阅读和代码复现"
+    - "开题准备"
+  contact:
+    github: "example-student"
+    email: "name [at] example.com"
+  note: "示例成员，请替换为真实且已获本人同意的信息。"
+
+- name: "李四"
+  cohort: "2021"
+  role: "硕士"
+  status: "已毕业"
+  research:
+    - "机器学习系统"
+    - "实验复现"
+  current: "工业界"
+  open_to_contact: false
+  contact_topics:
+    - "毕业流程"
+    - "实习和求职"
+  contact:
+    github: ""
+    email: ""
+  note: "示例毕业成员。open_to_contact 为 false 时不展示具体联系方式。"

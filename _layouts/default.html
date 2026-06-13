@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="{{ '/posts/' | relative_url }}">经验贴</a>
+        <a href="{{ '/members/' | relative_url }}">成员</a>
+        <a href="{{ '/topics/' | relative_url }}">研究方向</a>
+        <a href="{{ '/about/' | relative_url }}">关于</a>
+      </nav>
+    </header>
+
+    <main class="site-main">
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <p>本站用于课题组经验沉淀与成员连接。公开联系方式默认采用本人同意后展示。</p>
+    </footer>
+  </body>
+</html>

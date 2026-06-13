@@ -1,0 +1,61 @@
+name: 提交经验贴
+description: 不熟悉 Git 的同学可以先用这个表单提交经验贴草稿
+title: "[经验贴] "
+labels:
+  - content
+  - experience-post
+body:
+  - type: input
+    id: title
+    attributes:
+      label: 标题
+      description: 一句话说明这篇经验贴解决什么问题
+      placeholder: 例如：刚入组前三个月怎么做
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: 作者
+      placeholder: 例如：张三
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 分类
+      options:
+        - 入组指南
+        - 科研方法
+        - 论文写作
+        - 实验复现
+        - 投稿经验
+        - 毕业流程
+        - 实习求职
+        - 其他
+    validations:
+      required: true
+  - type: input
+    id: audience
+    attributes:
+      label: 适合谁读
+      placeholder: 例如：新入组同学、准备开题的同学
+  - type: textarea
+    id: content
+    attributes:
+      label: 正文
+      description: 建议包含背景、具体做法、常见坑、推荐资源、后来者可以联系谁
+      placeholder: |
+        ## 适合谁读
+
+        ## 背景
+
+        ## 具体做法
+
+        ## 常见坑
+
+        ## 推荐资源
+
+        ## 后来者可以联系谁
+    validations:
+      required: true
