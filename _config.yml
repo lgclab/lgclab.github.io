@@ -2,8 +2,8 @@ title: "课题组知识与连接站"
 description: "沉淀经验贴，连接在组成员与毕业成员。"
 lang: zh-CN
 timezone: Asia/Shanghai
-url: ""
-baseurl: ""
+url: "https://barytes.github.io"
+baseurl: "/lab-site"
 
 permalink: /posts/:year/:month/:day/:title/
 

@@ -63,6 +63,20 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/workflows/pages.yml", "actions/jekyll-build-pages")
         self.assert_file_contains(".github/workflows/pages.yml", "actions/deploy-pages")
 
+    def test_project_pages_baseurl_is_configured(self):
+        self.assert_file_contains("_config.yml", 'baseurl: "/lab-site"')
+
+    def test_homepage_has_polished_visual_structure(self):
+        self.assert_file_contains("index.md", "hero-panel")
+        self.assert_file_contains("index.md", "metric-strip")
+        self.assert_file_contains("assets/css/site.css", ".hero-panel")
+        self.assert_file_contains("assets/css/site.css", ".metric-strip")
+
+    def test_homepage_does_not_depend_on_generated_images(self):
+        self.assertFalse((ROOT / "assets/images/hero-network.png").exists())
+        css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+        self.assertNotIn("hero-network", css)
+
 
 if __name__ == "__main__":
     unittest.main()
