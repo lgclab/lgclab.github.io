@@ -39,8 +39,9 @@
 
 ## 当前维护者
 
-- **维护者**：Barytes
-- **GitHub**：[@beiyanliu](https://github.com/beiyanliu)
+- **维护者**：刘倍延 
+- **GitHub**：[@Barytes](https://github.com/Barytes)
+- **email**: liuby57@foxmail.com
 - **维护范围**：处理自动同步异常、更新成员页和经验贴、维护网站结构、处理 GitHub Pages 发布。
 - **联系维护者**：优先通过本仓库 [Issues](https://github.com/lgclab/lgclab.github.io/issues) 留言，方便后续追踪。
 
