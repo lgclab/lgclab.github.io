@@ -31,9 +31,9 @@ permalink: /members/
           {% endfor %}
         </ul>
         <p>
-          {% if member.contact.github %}
+          {% if member.contact.github and member.contact.github != blank %}
             GitHub: <a href="https://github.com/{{ member.contact.github }}">{{ member.contact.github }}</a>
-          {% elsif member.contact.email %}
+          {% elsif member.contact.email and member.contact.email != blank %}
             Email: {{ member.contact.email }}
           {% else %}
             可通过维护者转达联系请求。

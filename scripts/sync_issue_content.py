@@ -314,7 +314,16 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
     open_to_contact = bool_value(existing.get("open_to_contact")) if not submitted_open_to_contact else submitted_open_to_contact != "否"
     status = clean_value(fields.get("状态")) or string_value(existing.get("status")) or "其他"
     current = "课题组" if status == "在组" else status
-    body = clean_value(fields.get("个人页正文")) or string_value(existing.get("body")) or default_member_body(name, contact_topics)
+    submitted_body = clean_value(fields.get("个人页正文"))
+    submitted_about = clean_value(fields.get("我在做什么"))
+    submitted_experience = clean_value(fields.get("个人经验"))
+    existing_body = string_value(existing.get("body"))
+    if submitted_body:
+        body = submitted_body
+    elif submitted_about or submitted_experience or not existing_body or is_generated_member_body(existing_body):
+        body = default_member_body(name, contact_topics, research, submitted_about, submitted_experience)
+    else:
+        body = existing_body
     lines = [
         "---",
         yaml_scalar("name", name),
@@ -343,13 +352,36 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
     return SyncResult(rel_path, f"已同步成员信息到 `{rel_path}`。")
 
 
-def default_member_body(name: str, contact_topics: List[str]) -> str:
-    topics = "\n".join(f"- {topic}" for topic in contact_topics) if contact_topics else "- 可以补充可交流主题。"
+def markdown_list(values: List[str], placeholder: str) -> str:
+    return "\n".join(f"- {value}" for value in values) if values else placeholder
+
+
+def is_generated_member_body(body: str) -> bool:
+    required_headings = ["## 我在做什么", "## 可以找我聊什么", "## 个人经验"]
+    if not all(heading in body for heading in required_headings):
+        return False
+    generated_phrases = ["这里可以补充", "- 可以补充可交流主题。"]
+    return any(phrase in body for phrase in generated_phrases)
+
+
+def default_member_body(
+    name: str,
+    contact_topics: List[str],
+    research: List[str],
+    about: str = "",
+    experience: str = "",
+) -> str:
+    about_text = about or markdown_list(
+        research,
+        f"这里可以补充{name}目前的研究方向、项目经历或正在关注的问题。",
+    )
+    topics = markdown_list(contact_topics, "- 可以补充可交流主题。")
+    experience_text = experience or "这里可以补充希望后来同学提前知道的经验。"
     return "\n".join(
         [
             "## 我在做什么",
             "",
-            f"这里可以补充{name}目前的研究方向、项目经历或正在关注的问题。",
+            about_text,
             "",
             "## 可以找我聊什么",
             "",
@@ -357,7 +389,7 @@ def default_member_body(name: str, contact_topics: List[str]) -> str:
             "",
             "## 个人经验",
             "",
-            "这里可以补充希望后来同学提前知道的经验。",
+            experience_text,
         ]
     )
 

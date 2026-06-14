@@ -120,6 +120,73 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn('github: "old-gh"', content)
             self.assertIn("旧正文", content)
 
+    def test_member_issue_blank_body_uses_research_in_profile_body(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            issue = {
+                "number": 5,
+                "title": "[成员] 王五",
+                "body": form_body(
+                    [
+                        ("提交类型", "新增成员"),
+                        ("选择已有成员 slug", "不适用"),
+                        ("姓名", "王五"),
+                        ("新成员页面文件名 slug", "wang-wu"),
+                        ("入组或入学年份", "2030"),
+                        ("身份", "硕士"),
+                        ("状态", "已毕业"),
+                        ("研究主题 topics", "AI agents"),
+                        ("个人页展示的研究方向", "相约1829"),
+                        ("可交流主题", "吃饭，唱歌，玩耍"),
+                        ("是否愿意公开连接入口", "是"),
+                        ("可公开联系方式", "_No response_"),
+                        ("个人页正文", "_No response_"),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-14")
+
+            content = (root / result.changed_path).read_text(encoding="utf-8")
+            self.assertIn("## 我在做什么", content)
+            self.assertIn("- 相约1829", content)
+            self.assertIn("- 吃饭，唱歌，玩耍", content)
+            self.assertNotIn("这里可以补充王五目前的研究方向", content)
+
+    def test_member_issue_section_fields_build_profile_body(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            issue = {
+                "number": 6,
+                "title": "[成员] 赵六",
+                "body": form_body(
+                    [
+                        ("提交类型", "新增成员"),
+                        ("选择已有成员 slug", "不适用"),
+                        ("姓名", "赵六"),
+                        ("新成员页面文件名 slug", "zhao-liu"),
+                        ("入组或入学年份", "2031"),
+                        ("身份", "博士"),
+                        ("状态", "在组"),
+                        ("研究主题 topics", "机器人"),
+                        ("个人页展示的研究方向", "具身智能"),
+                        ("我在做什么", "最近在做具身智能实验。"),
+                        ("可交流主题", "实验复现"),
+                        ("个人经验", "开题前可以先把 baseline 跑通。"),
+                        ("是否愿意公开连接入口", "否"),
+                        ("可公开联系方式", "_No response_"),
+                        ("个人页正文", "_No response_"),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-14")
+
+            content = (root / result.changed_path).read_text(encoding="utf-8")
+            self.assertIn("最近在做具身智能实验。", content)
+            self.assertIn("- 实验复现", content)
+            self.assertIn("开题前可以先把 baseline 跑通。", content)
+
     def test_member_issue_creates_unique_slug_when_slug_exists_for_different_name(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -261,6 +328,16 @@ class IssueContentSyncTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue((root / "_members" / "wang-wu.md").is_file())
+
+    def test_member_templates_do_not_render_blank_contact_as_empty_github_link(self):
+        self.assertIn(
+            "member.contact.github != blank",
+            (ROOT / "members.md").read_text(encoding="utf-8"),
+        )
+        self.assertIn(
+            "page.contact.github != blank",
+            (ROOT / "_layouts" / "member.html").read_text(encoding="utf-8"),
+        )
 
 
 if __name__ == "__main__":

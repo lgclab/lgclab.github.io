@@ -39,9 +39,9 @@ layout: default
 
       <h2>公开连接入口</h2>
       <p>
-        {% if page.contact.github %}
+        {% if page.contact.github and page.contact.github != blank %}
           GitHub: <a href="https://github.com/{{ page.contact.github }}">{{ page.contact.github }}</a>
-        {% elsif page.contact.email %}
+        {% elsif page.contact.email and page.contact.email != blank %}
           Email: {{ page.contact.email }}
         {% else %}
           可通过维护者转达联系请求。

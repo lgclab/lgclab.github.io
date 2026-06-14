@@ -79,6 +79,13 @@ body:
         多智能体系统
         强化学习
   - type: textarea
+    id: profile_about
+    attributes:
+      label: 我在做什么
+      description: 会写入个人页正文的“我在做什么”部分；留空时会使用上面的研究方向。
+      placeholder: |
+        目前在做多智能体系统中的协作与评估。
+  - type: textarea
     id: contact_topics
     attributes:
       label: 可交流主题
@@ -87,6 +94,13 @@ body:
         论文投稿
         毕业流程
         实习求职
+  - type: textarea
+    id: profile_experience
+    attributes:
+      label: 个人经验
+      description: 会写入个人页正文的“个人经验”部分。
+      placeholder: |
+        希望后来同学提前知道的经验、建议或踩坑记录。
   - type: dropdown
     id: open_to_contact
     attributes:
@@ -108,7 +122,7 @@ body:
     id: profile_body
     attributes:
       label: 个人页正文
-      description: 可以直接写 Markdown，维护者会放到成员页正文中。
+      description: 可选。填写后会覆盖上面的“我在做什么 / 可以找我聊什么 / 个人经验”自动正文。
       placeholder: |
         ## 我在做什么
 
