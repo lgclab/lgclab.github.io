@@ -15,9 +15,7 @@ topics:
 current: "课题组"
 open_to_contact: true
 contact_topics: []
-contact:
-  github: ""
-  email: ""
+contact: {}
 ---
 
 ## 我在做什么

@@ -12,9 +12,7 @@ current: "已毕业"
 open_to_contact: true
 contact_topics:
   - "吃饭，唱歌，玩耍"
-contact:
-  github: ""
-  email: ""
+contact: {}
 ---
 
 ## 我在做什么

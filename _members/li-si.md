@@ -15,9 +15,7 @@ open_to_contact: false
 contact_topics:
   - "毕业流程"
   - "实习和求职"
-contact:
-  github: ""
-  email: ""
+contact: {}
 note: "示例毕业成员。open_to_contact 为 false 时不展示具体联系方式。"
 ---
 

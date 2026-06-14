@@ -153,6 +153,38 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn("- 吃饭，唱歌，玩耍", content)
             self.assertNotIn("这里可以补充王五目前的研究方向", content)
 
+    def test_member_issue_omits_blank_contact_values(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            issue = {
+                "number": 7,
+                "title": "[成员] 钱七",
+                "body": form_body(
+                    [
+                        ("提交类型", "新增成员"),
+                        ("选择已有成员 slug", "不适用"),
+                        ("姓名", "钱七"),
+                        ("新成员页面文件名 slug", "qian-qi"),
+                        ("入组或入学年份", "2032"),
+                        ("身份", "硕士"),
+                        ("状态", "在组"),
+                        ("研究主题 topics", "控制"),
+                        ("个人页展示的研究方向", "控制"),
+                        ("可交流主题", "复现"),
+                        ("是否愿意公开连接入口", "是"),
+                        ("可公开联系方式", "_No response_"),
+                        ("个人页正文", "_No response_"),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-14")
+
+            content = (root / result.changed_path).read_text(encoding="utf-8")
+            self.assertIn("contact: {}", content)
+            self.assertNotIn('github: ""', content)
+            self.assertNotIn('email: ""', content)
+
     def test_member_issue_section_fields_build_profile_body(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -97,6 +97,16 @@ def yaml_list(key: str, values: List[str]) -> List[str]:
     return lines
 
 
+def yaml_contact(contact: Dict[str, str]) -> List[str]:
+    entries = [(key, contact.get(key, "")) for key in ["github", "email", "homepage", "scholar", "orcid"]]
+    entries = [(key, value) for key, value in entries if value]
+    if not entries:
+        return ["contact: {}"]
+    lines = ["contact:"]
+    lines.extend(f"  {key}: {yaml_quote(value)}" for key, value in entries)
+    return lines
+
+
 def slugify(value: str, fallback: str = "item") -> str:
     value = transliterate(value)
     value = value.lower()
@@ -336,9 +346,7 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
         yaml_scalar("current", current),
         yaml_bool("open_to_contact", open_to_contact),
         *yaml_list("contact_topics", contact_topics),
-        "contact:",
-        f"  github: {yaml_quote(contact.get('github', ''))}",
-        f"  email: {yaml_quote(contact.get('email', ''))}",
+        *yaml_contact(contact),
         "---",
         "",
         body,
