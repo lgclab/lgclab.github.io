@@ -63,8 +63,9 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/workflows/pages.yml", "actions/jekyll-build-pages")
         self.assert_file_contains(".github/workflows/pages.yml", "actions/deploy-pages")
 
-    def test_project_pages_baseurl_is_configured(self):
-        self.assert_file_contains("_config.yml", 'baseurl: "/lab-site"')
+    def test_custom_domain_root_url_is_configured(self):
+        self.assert_file_contains("_config.yml", 'url: "https://lgclab.github.io"')
+        self.assert_file_contains("_config.yml", 'baseurl: ""')
 
     def test_homepage_has_polished_visual_structure(self):
         self.assert_file_contains("index.md", "hero-panel")
