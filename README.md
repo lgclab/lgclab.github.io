@@ -1,24 +1,43 @@
-# 课题组知识与连接站
+# 廖总全🌍后援会
 
-这是一个面向课题组的 GitHub Pages 静态网站，用来沉淀经验贴并维护成员连接入口。
+廖总全🌍后援会是一个面向廖老板学生的交流平台。它希望把分散在不同届、不同方向、不同阶段里的经验沉淀下来，让后来同学少踩坑，也让在组成员和毕业成员更容易找到彼此。
 
-## 核心板块
+## 网站包括什么
 
-- `经验贴`：入组、开题、论文、实验、投稿、毕业、实习和求职经验。
-- `成员`：当前成员、毕业成员、研究方向、可交流主题和自愿公开的联系方式。
-- `研究方向`：按研究问题连接相关经验贴和成员。
-- `关于课题组`：说明网站目的、内容边界和维护方式。
+- **经验贴**：入组、开题、论文阅读、实验复现、投稿、毕业、实习、求职等真实经验。
+- **成员信息**：在组成员和毕业成员的研究主题、可交流话题、当前状态和自愿公开的联系方式。
+- **主题索引**：从经验贴和成员页里的 `topics` 自动汇总，帮助大家按主题找到资料和人。
+- **维护说明**：说明网站如何收集内容、如何保护隐私、维护者如何更新网站。
 
-## 常见维护
+## 如何加入或更新成员信息
 
-新增经验贴：在 `_posts/` 中新增 `YYYY-MM-DD-title.md` 文件，并填写 front matter。
+成员信息主要通过 GitHub Issue 维护：
 
-更新成员：在 `_members/` 中新增或编辑对应成员的 Markdown 文件。
+1. 打开 [Issues 页面](https://github.com/lgclab/lgclab.github.io/issues)。
+2. 选择 **新增或更新成员** 模板。
+3. 填写姓名、身份、状态、研究主题、可交流话题和愿意公开的联系方式。
+4. 提交 Issue 后，维护者会整理成 `_members/` 下的成员页面并合并发布。
 
-更新研究方向：在经验贴或成员页 front matter 中填写 `topics`，`topics.md` 会自动汇总。
+成员信息请优先由本人提交。代为提交时，需要先确认对方同意公开哪些字段。不要提交手机号、微信号等敏感联系方式。
 
-## 发布
+## 如何发布经验贴
 
-仓库启用 GitHub Pages 后，`.github/workflows/pages.yml` 会在推送到 `main` 时自动构建并发布。
+经验贴也主要通过 GitHub Issue 维护：
 
-在 GitHub 仓库设置中进入 `Settings -> Pages`，将 `Build and deployment` 的 `Source` 设置为 `GitHub Actions`。
+1. 打开 [Issues 页面](https://github.com/lgclab/lgclab.github.io/issues)。
+2. 选择 **提交经验贴** 模板。
+3. 按模板填写标题、作者、分类、适合读者和正文草稿。
+4. 维护者会根据草稿整理为 `_posts/` 下的 Markdown 文章并发布到网站。
+
+如果你熟悉 GitHub，也可以直接提交 Pull Request。具体格式见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 当前维护者
+
+- **维护者**：Barytes
+- **GitHub**：[@beiyanliu](https://github.com/beiyanliu)
+- **维护范围**：整理 Issue 内容、更新成员页和经验贴、维护网站结构、处理 GitHub Pages 发布。
+- **联系维护者**：优先通过本仓库 [Issues](https://github.com/lgclab/lgclab.github.io/issues) 留言，方便后续追踪。
+
+## 发布方式
+
+本网站是 GitHub Pages 静态站。内容合并到 `main` 后，`.github/workflows/pages.yml` 会自动构建并发布新版网站。

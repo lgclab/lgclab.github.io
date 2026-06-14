@@ -1,10 +1,38 @@
 # 贡献指南
 
-感谢为课题组知识与连接站补充内容。这个站点追求低维护、可持续、隐私友好。
+感谢为廖总全🌍后援会补充内容。这个站点追求低维护、可持续、隐私友好：普通同学可以通过 GitHub Issue 提交内容，熟悉 Git 的同学也可以直接提交 Pull Request。
 
-## 新增经验贴
+## 通过 GitHub Issue 加入或发帖
 
-请在 `_posts/` 下新增 Markdown 文件，文件名格式为：
+这是推荐方式，适合大多数同学。
+
+Issues 页面：[https://github.com/lgclab/lgclab.github.io/issues](https://github.com/lgclab/lgclab.github.io/issues)
+
+### 新增或更新成员信息
+
+1. 打开 Issues 页面。
+2. 选择 **新增或更新成员** 模板。
+3. 填写姓名、slug、入学或入组年份、身份、状态、研究主题、可交流话题和可公开联系方式。
+4. 勾选公开确认后提交。
+
+成员信息请优先由本人提交。代为提交时，需要先确认对方同意公开哪些字段。建议公开 GitHub、个人主页、Google Scholar、ORCID 或经过处理的邮箱，不建议公开手机号、微信号等敏感联系方式。
+
+### 提交经验贴
+
+1. 打开 Issues 页面。
+2. 选择 **提交经验贴** 模板。
+3. 填写标题、作者、分类、适合读者和正文草稿。
+4. 正文建议包含背景、具体做法、常见坑、推荐资源、后来者可以联系谁。
+
+Issue 提交后，维护者会把内容整理为网站中的 Markdown 文件，并在合并后由 GitHub Pages 自动发布。
+
+## 通过 Pull Request 加入或发帖
+
+如果你熟悉 GitHub，可以直接修改文件并提交 PR。
+
+### 新增经验贴
+
+在 `_posts/` 下新增 Markdown 文件，文件名格式为：
 
 ```text
 YYYY-MM-DD-short-title.md
@@ -44,7 +72,7 @@ audience: "新入组同学"
 ## 后来者可以联系谁
 ```
 
-## 更新成员信息
+### 新增或更新成员信息
 
 成员信息在 `_members/` 中维护。每位成员一个 Markdown 文件，例如：
 
@@ -57,6 +85,7 @@ _members/zhang-san.md
 ```yaml
 ---
 name: "张三"
+title: "张三"
 cohort: "2024"
 role: "硕士"
 status: "在组"
@@ -65,16 +94,16 @@ research:
 topics:
   - "多智能体系统"
   - "强化学习"
+current: "课题组"
 open_to_contact: true
 contact_topics:
   - "入组前三个月怎么启动"
 contact:
   github: "example-student"
   email: "name [at] example.com"
+note: "请只填写本人同意公开的信息。"
 ---
 ```
-
-请只提交本人同意公开的信息。建议公开 GitHub、个人主页、Google Scholar、ORCID 或经过处理的邮箱，不建议公开手机号、微信号等敏感联系方式。
 
 如果成员不想被直接联系，请设置：
 
@@ -82,14 +111,37 @@ contact:
 open_to_contact: false
 ```
 
-## 更新研究方向
+## 项目代码架构
 
-研究方向页不再单独维护。网站会自动汇总 `_posts/` 和 `_members/` 中的 `topics` 字段：
+这个项目是一个 GitHub Pages + Jekyll 静态站，不需要数据库或后台服务。
 
-```yaml
-topics:
-  - "多智能体系统"
-  - "强化学习"
+- `_config.yml`：站点标题、URL、集合、默认 layout 和发布排除项。
+- `_layouts/`：页面、经验贴、成员页的 HTML 模板。
+- `_posts/`：经验贴。每篇文章一个 Markdown 文件。
+- `_members/`：成员页。每位成员一个 Markdown 文件。
+- `index.md`：首页，包括最近经验贴、热门主题和成员连接入口。
+- `posts.md`：经验贴列表页。
+- `members.md`：成员列表页。
+- `topics.md`：主题页，会自动汇总经验贴和成员页中的 `topics` 字段。
+- `about.md`：网站目的和维护方式说明。
+- `assets/css/site.css`：全站样式。
+- `.github/ISSUE_TEMPLATE/`：成员信息和经验贴的 Issue 表单。
+- `.github/workflows/pages.yml`：GitHub Pages 自动构建和发布流程。
+- `tests/`：轻量结构测试，防止关键页面、模板和字段被误删。
+
+## 维护者应该做什么
+
+普通同学只需要提交 Issue 或 PR；以下事项主要由维护者负责：
+
+- 定期查看 Issues，把成员信息和经验贴草稿整理成 Markdown 文件。
+- 处理隐私边界，只公开提交者明确同意公开的字段。
+- 合并前检查 front matter 是否完整，尤其是 `title`、`topics`、`open_to_contact` 等字段。
+- 保持主题命名相对统一，避免同一个主题出现多个近义写法。
+- 合并 PR 前运行结构测试：
+
+```bash
+python3 -m unittest
 ```
 
-如果某个主题同时出现在经验贴和成员页中，它会自动归到同一个主题下。`tags` 可以继续用于文章标签；`topics` 用于研究方向和主题索引。
+- 确认 `main` 分支合并后 GitHub Pages 正常发布。
+- 如果修改网站结构，同步更新 README、贡献指南、Issue 模板和测试。
