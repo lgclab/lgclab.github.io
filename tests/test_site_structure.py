@@ -88,6 +88,17 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "研究主题")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "个人页正文")
 
+    def test_experience_issue_template_supports_custom_category_and_tags(self):
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/experience-post.yml", "type: input")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/experience-post.yml", "标签 tags")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/experience-post.yml", "主题页")
+
+    def test_issue_sync_workflow_exists(self):
+        self.assert_file_contains(".github/workflows/issue-content-sync.yml", "types: [opened, edited, reopened]")
+        self.assert_file_contains(".github/workflows/issue-content-sync.yml", "scripts/sync_issue_content.py")
+        self.assert_file_contains(".github/workflows/issue-content-sync.yml", "issues: write")
+        self.assert_file_contains(".github/workflows/issue-content-sync.yml", "contents: write")
+
     def test_contribution_and_deployment_files_exist(self):
         for relative_path in [
             "CONTRIBUTING.md",

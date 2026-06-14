@@ -21,7 +21,7 @@ body:
     id: slug
     attributes:
       label: 成员页面文件名 slug
-      description: 用小写英文、数字和连字符；维护者会保存为 _members/<slug>.md
+      description: 用小写英文、数字和连字符；如果同 slug 已被不同姓名使用，系统会自动追加 -2、-3，避免覆盖他人页面
       placeholder: 例如：zhang-san
     validations:
       required: true

@@ -16,9 +16,11 @@
 1. 打开 [Issues 页面](https://github.com/lgclab/lgclab.github.io/issues)。
 2. 选择 **新增或更新成员** 模板。
 3. 填写姓名、身份、状态、研究主题、可交流话题和愿意公开的联系方式。
-4. 提交 Issue 后，维护者会整理成 `_members/` 下的成员页面并合并发布。
+4. 提交或编辑 Issue 后，GitHub Actions 会自动同步到 `_members/` 下的成员页面。
 
 成员信息请优先由本人提交。代为提交时，需要先确认对方同意公开哪些字段。不要提交手机号、微信号等敏感联系方式。
+
+如果两个成员填写了相同 slug，但姓名不同，系统不会覆盖已有页面，会自动生成 `slug-2`、`slug-3` 这样的新页面。
 
 ## 如何发布经验贴
 
@@ -26,8 +28,10 @@
 
 1. 打开 [Issues 页面](https://github.com/lgclab/lgclab.github.io/issues)。
 2. 选择 **提交经验贴** 模板。
-3. 按模板填写标题、作者、分类、适合读者和正文草稿。
-4. 维护者会根据草稿整理为 `_posts/` 下的 Markdown 文章并发布到网站。
+3. 按模板填写标题、作者、自定义分类、多行 tags、适合读者和正文草稿。
+4. 提交或编辑 Issue 后，GitHub Actions 会自动同步到 `_posts/` 下的 Markdown 文章。
+
+经验贴的分类和 tags 会自动写入 `topics`，因此也会出现在主题页中。
 
 如果你熟悉 GitHub，也可以直接提交 Pull Request。具体格式见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
@@ -35,9 +39,9 @@
 
 - **维护者**：Barytes
 - **GitHub**：[@beiyanliu](https://github.com/beiyanliu)
-- **维护范围**：整理 Issue 内容、更新成员页和经验贴、维护网站结构、处理 GitHub Pages 发布。
+- **维护范围**：处理自动同步异常、更新成员页和经验贴、维护网站结构、处理 GitHub Pages 发布。
 - **联系维护者**：优先通过本仓库 [Issues](https://github.com/lgclab/lgclab.github.io/issues) 留言，方便后续追踪。
 
 ## 发布方式
 
-本网站是 GitHub Pages 静态站。内容合并到 `main` 后，`.github/workflows/pages.yml` 会自动构建并发布新版网站。
+本网站是 GitHub Pages 静态站。Issue 内容会先由 `.github/workflows/issue-content-sync.yml` 自动同步成 Markdown 文件；内容合并到 `main` 后，`.github/workflows/pages.yml` 会自动构建并发布新版网站。

@@ -20,21 +20,23 @@ body:
       placeholder: 例如：张三
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: category
     attributes:
       label: 分类
-      options:
-        - 入组指南
-        - 科研方法
-        - 论文写作
-        - 实验复现
-        - 投稿经验
-        - 毕业流程
-        - 实习求职
-        - 其他
+      description: 可自定义。分类会自动写入 topics，并显示在主题页。
+      placeholder: 例如：开题复盘、实验复现、投稿经验
     validations:
       required: true
+  - type: textarea
+    id: tags
+    attributes:
+      label: 标签 tags
+      description: 每行一个。分类和 tags 都会自动写入 topics，显示在主题页。
+      placeholder: |
+        开题
+        选题
+        文献阅读
   - type: input
     id: audience
     attributes:
