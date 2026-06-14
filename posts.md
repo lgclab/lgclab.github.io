@@ -1,7 +1,6 @@
 ---
 title: "经验贴"
 permalink: /posts/
-summary: "一篇文章解决一个具体问题：入组、开题、论文、实验、投稿、毕业、实习和求职。"
 ---
 
 <div class="list">
