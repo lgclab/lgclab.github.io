@@ -17,21 +17,6 @@ kicker: "Research Group Knowledge & Connections"
   </div>
 </section>
 
-<section class="metric-strip" aria-label="站点核心功能">
-  <div class="metric">
-    <strong>经验沉淀</strong>
-    <span>入组、开题、论文、实验、毕业</span>
-  </div>
-  <div class="metric">
-    <strong>成员连接</strong>
-    <span>按方向、年级、可交流主题找人</span>
-  </div>
-  <div class="metric">
-    <strong>低维护</strong>
-    <span>Markdown 与 YAML 更新，GitHub Pages 自动发布</span>
-  </div>
-</section>
-
 <section class="home-section">
   <div class="section-heading">
     <p class="eyebrow">Latest Notes</p>
@@ -84,7 +69,6 @@ kicker: "Research Group Knowledge & Connections"
   <div>
     <p class="eyebrow">People Map</p>
     <h2>成员连接</h2>
-    <p>成员页不是通讯录，而是一个隐私友好的连接入口。每个人可以选择是否公开联系方式，并标注自己愿意交流的主题。</p>
   </div>
   <div class="connection-actions">
     <a class="button" href="{{ '/members/' | relative_url }}">查看成员</a>
