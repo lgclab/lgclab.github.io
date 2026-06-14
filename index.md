@@ -7,7 +7,6 @@ kicker: "Research Group Knowledge & Connections"
 
 <section class="hero-panel">
   <div class="hero-copy">
-    <p class="hero-kicker">Research Group Knowledge & Connections</p>
     <h1 class="hero-title">廖总全🌍后援会</h1>
     <p class="hero-summary">廖老板的研究生学生交流平台：沉淀经验，减少踩坑；连接同门，促进交流。</p>
     <div class="hero-actions">
