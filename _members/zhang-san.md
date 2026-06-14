@@ -18,7 +18,6 @@ contact_topics: []
 contact:
   github: ""
   email: ""
-note: "由 GitHub Issue #1 自动同步。"
 ---
 
 ## 我在做什么

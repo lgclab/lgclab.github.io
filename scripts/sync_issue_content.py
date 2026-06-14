@@ -211,8 +211,6 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
     status = clean_value(fields.get("状态")) or "其他"
     current = "课题组" if status == "在组" else status
     body = clean_value(fields.get("个人页正文")) or default_member_body(name, contact_topics)
-    issue_number = str(issue.get("number", "")).strip()
-
     lines = [
         "---",
         yaml_scalar("name", name),
@@ -228,7 +226,6 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
         "contact:",
         f"  github: {yaml_quote(contact.get('github', ''))}",
         f"  email: {yaml_quote(contact.get('email', ''))}",
-        yaml_scalar("note", f"由 GitHub Issue #{issue_number} 自动同步。"),
         "---",
         "",
         body,

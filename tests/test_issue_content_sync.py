@@ -68,6 +68,7 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn('role: "博士"', content)
             self.assertIn('  - "你好"', content)
             self.assertNotIn("旧主题", content)
+            self.assertNotIn("由 GitHub Issue", content)
 
     def test_member_issue_creates_unique_slug_when_slug_exists_for_different_name(self):
         with tempfile.TemporaryDirectory() as tmp:
