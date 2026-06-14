@@ -6,12 +6,17 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
-from scripts import update_member_issue_template
+try:
+    from scripts import update_member_issue_template
+except ModuleNotFoundError:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts import update_member_issue_template
 
 
 NO_RESPONSE = "_No response_"

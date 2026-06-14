@@ -1,9 +1,14 @@
+import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 from scripts import sync_issue_content
 from scripts import update_member_issue_template
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def form_body(fields):
@@ -203,6 +208,59 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn("        - li-si", content)
             self.assertIn("        - zhang-san", content)
             self.assertLess(content.index("- li-si"), content.index("- zhang-san"))
+
+    def test_sync_script_runs_as_workflow_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            event_path = root / "event.json"
+            event_path.write_text(
+                json.dumps(
+                    {
+                        "issue": {
+                            "number": 3,
+                            "title": "[成员] 王五",
+                            "body": form_body(
+                                [
+                                    ("提交类型", "新增成员"),
+                                    ("选择已有成员 slug", "不适用"),
+                                    ("姓名", "王五"),
+                                    ("新成员页面文件名 slug", "wang-wu"),
+                                    ("入组或入学年份", "2030"),
+                                    ("身份", "硕士"),
+                                    ("状态", "已毕业"),
+                                    ("研究主题 topics", "_No response_"),
+                                    ("个人页展示的研究方向", "_No response_"),
+                                    ("可交流主题", "_No response_"),
+                                    ("是否愿意公开连接入口", "是"),
+                                    ("可公开联系方式", "_No response_"),
+                                    ("个人页正文", "_No response_"),
+                                ]
+                            ),
+                        }
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "sync_issue_content.py"),
+                    "--event",
+                    str(event_path),
+                    "--root",
+                    str(root),
+                    "--comment-json",
+                    "comment.json",
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue((root / "_members" / "wang-wu.md").is_file())
 
 
 if __name__ == "__main__":
