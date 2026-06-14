@@ -5,12 +5,13 @@ cohort: "2030"
 role: "硕士"
 status: "已毕业"
 research:
-  - "AI agents"
+  - "相约1829"
 topics:
   - "AI agents"
 current: "已毕业"
 open_to_contact: true
-contact_topics: []
+contact_topics:
+  - "吃饭，唱歌，玩耍"
 contact:
   github: ""
   email: ""
@@ -22,7 +23,7 @@ contact:
 
 ## 可以找我聊什么
 
-- 可以补充可交流主题。
+- 吃饭，唱歌，玩耍
 
 ## 个人经验
 
