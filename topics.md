@@ -1,7 +1,6 @@
 ---
 title: "研究方向"
 permalink: /topics/
-summary: "由经验贴和成员页中的 topics 字段自动汇总，帮助同学从主题进入资料和人。"
 ---
 
 {% assign all_topics = "" | split: "" %}
