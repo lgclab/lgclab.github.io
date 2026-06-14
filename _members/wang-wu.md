@@ -11,7 +11,7 @@ topics:
 current: "已毕业"
 open_to_contact: true
 contact_topics:
-  - "吃饭，唱歌，玩耍"
+  - "吃饭，唱歌"
 contact: {}
 ---
 
@@ -21,7 +21,7 @@ contact: {}
 
 ## 可以找我聊什么
 
-- 吃饭，唱歌，玩耍
+- 吃饭，唱歌
 
 ## 个人经验
 
