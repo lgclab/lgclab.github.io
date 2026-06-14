@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from scripts import sync_issue_content
+from scripts import update_member_issue_template
 
 
 def form_body(fields):
@@ -28,6 +29,11 @@ class IssueContentSyncTest(unittest.TestCase):
                     "topics:",
                     '  - "旧主题"',
                     "open_to_contact: true",
+                    "contact_topics:",
+                    '  - "旧交流"',
+                    "contact:",
+                    '  github: "old-gh"',
+                    '  email: "old@example.com"',
                     "---",
                     "",
                     "旧正文",
@@ -69,6 +75,45 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn('  - "你好"', content)
             self.assertNotIn("旧主题", content)
             self.assertNotIn("由 GitHub Issue", content)
+
+    def test_member_issue_update_mode_uses_selected_slug_and_preserves_blank_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_member(root, "zhang-san", "张三")
+            issue = {
+                "number": 4,
+                "title": "[成员] 更新张三",
+                "body": form_body(
+                    [
+                        ("提交类型", "更新成员"),
+                        ("选择已有成员 slug", "zhang-san"),
+                        ("姓名", "_No response_"),
+                        ("新成员页面文件名 slug", "_No response_"),
+                        ("入组或入学年份", "2029"),
+                        ("身份", "_No response_"),
+                        ("状态", "_No response_"),
+                        ("研究主题 topics", "新主题"),
+                        ("个人页展示的研究方向", "_No response_"),
+                        ("可交流主题", "_No response_"),
+                        ("是否愿意公开连接入口", "_No response_"),
+                        ("可公开联系方式", "_No response_"),
+                        ("个人页正文", "_No response_"),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-14")
+
+            self.assertEqual(result.changed_path, "_members/zhang-san.md")
+            content = (root / "_members/zhang-san.md").read_text(encoding="utf-8")
+            self.assertIn('name: "张三"', content)
+            self.assertIn('cohort: "2029"', content)
+            self.assertIn('role: "硕士"', content)
+            self.assertIn('status: "在组"', content)
+            self.assertIn('  - "新主题"', content)
+            self.assertIn('  - "旧交流"', content)
+            self.assertIn('github: "old-gh"', content)
+            self.assertIn("旧正文", content)
 
     def test_member_issue_creates_unique_slug_when_slug_exists_for_different_name(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -127,6 +172,37 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn('category: "开题复盘"', content)
             self.assertIn("tags:\n  - \"开题\"\n  - \"选题\"\n  - \"文献阅读\"", content)
             self.assertIn("topics:\n  - \"开题复盘\"\n  - \"开题\"\n  - \"选题\"\n  - \"文献阅读\"", content)
+
+    def test_member_issue_template_dropdown_is_generated_from_member_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_member(root, "zhang-san", "张三")
+            self.write_member(root, "li-si", "李四")
+            template = root / ".github" / "ISSUE_TEMPLATE" / "member-update.yml"
+            template.parent.mkdir(parents=True)
+            template.write_text(
+                "\n".join(
+                    [
+                        "body:",
+                        "  - type: dropdown",
+                        "    id: existing_slug",
+                        "    attributes:",
+                        "      label: 选择已有成员 slug",
+                        "      options:",
+                        "        # member-slug-options:start",
+                        "        - 不适用",
+                        "        # member-slug-options:end",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            update_member_issue_template.update_template(root)
+
+            content = template.read_text(encoding="utf-8")
+            self.assertIn("        - li-si", content)
+            self.assertIn("        - zhang-san", content)
+            self.assertLess(content.index("- li-si"), content.index("- zhang-san"))
 
 
 if __name__ == "__main__":

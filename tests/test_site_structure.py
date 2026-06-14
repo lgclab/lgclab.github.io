@@ -85,8 +85,14 @@ class SiteStructureTest(unittest.TestCase):
     def test_member_issue_template_collects_profile_page_fields(self):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "_members/")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "slug")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "提交类型")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "选择已有成员 slug")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "member-slug-options:start")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "zhang-san")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "li-si")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "研究主题")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "个人页正文")
+        self.assert_file_contains("scripts/update_member_issue_template.py", "update_template")
 
     def test_experience_issue_template_supports_custom_category_and_tags(self):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/experience-post.yml", "type: input")

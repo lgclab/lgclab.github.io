@@ -8,23 +8,41 @@ body:
   - type: markdown
     attributes:
       value: |
-        这个表单用于新增或更新成员页。维护者会根据这些信息创建或修改 `_members/<slug>.md`。
+        这个表单用于新增或更新成员页。新增成员时填写新 slug；更新成员时从下拉框选择已有 slug。
+        更新时只需要填写想修改的字段，留空字段会保留原成员页内容。
         请只填写本人同意公开的信息；不要填写手机号、微信号等敏感联系方式。
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 提交类型
+      options:
+        - 新增成员
+        - 更新成员
+    validations:
+      required: true
+  - type: dropdown
+    id: existing_slug
+    attributes:
+      label: 选择已有成员 slug
+      description: 更新成员时请选择；新增成员时选择“不适用”。
+      options:
+        # member-slug-options:start
+        - 不适用
+        - li-si
+        - zhang-san
+        # member-slug-options:end
   - type: input
     id: name
     attributes:
       label: 姓名
+      description: 新增成员时必填；更新成员时可留空以保留原姓名。
       placeholder: 例如：张三
-    validations:
-      required: true
   - type: input
     id: slug
     attributes:
-      label: 成员页面文件名 slug
-      description: 用小写英文、数字和连字符；如果同 slug 已被不同姓名使用，系统会自动追加 -2、-3，避免覆盖他人页面
+      label: 新成员页面文件名 slug
+      description: 新增成员时填写。用小写英文、数字和连字符；如果同 slug 已被不同姓名使用，系统会自动追加 -2、-3，避免覆盖他人页面。
       placeholder: 例如：zhang-san
-    validations:
-      required: true
   - type: input
     id: cohort
     attributes:
@@ -43,8 +61,6 @@ body:
         - 在组
         - 已毕业
         - 其他
-    validations:
-      required: true
   - type: textarea
     id: topics
     attributes:
@@ -53,8 +69,6 @@ body:
       placeholder: |
         多智能体系统
         强化学习
-    validations:
-      required: true
   - type: textarea
     id: research
     attributes:

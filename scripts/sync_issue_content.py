@@ -11,6 +11,8 @@ from datetime import date
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
+from scripts import update_member_issue_template
+
 
 NO_RESPONSE = "_No response_"
 
@@ -149,12 +151,96 @@ def extract_front_matter_value(content: str, key: str) -> str:
     return match.group(1).strip() if match else ""
 
 
+def split_front_matter(content: str) -> tuple[str, str]:
+    if not content.startswith("---\n"):
+        return "", content
+    _, rest = content.split("---\n", 1)
+    front_matter, body = rest.split("\n---", 1)
+    return front_matter, body.lstrip("\n")
+
+
+def parse_front_matter(content: str) -> Dict[str, object]:
+    front_matter, _ = split_front_matter(content)
+    data: Dict[str, object] = {}
+    current_list_key: Optional[str] = None
+    current_map_key: Optional[str] = None
+    for line in front_matter.splitlines():
+        if not line.strip():
+            continue
+        if line.startswith("  - ") and current_list_key:
+            data.setdefault(current_list_key, [])
+            item = line[4:].strip().strip('"')
+            if isinstance(data[current_list_key], list):
+                data[current_list_key].append(item)
+            continue
+        if line.startswith("  ") and current_map_key and ":" in line:
+            key, value = line.strip().split(":", 1)
+            data.setdefault(current_map_key, {})
+            if isinstance(data[current_map_key], dict):
+                data[current_map_key][key.strip()] = value.strip().strip('"')
+            continue
+
+        current_list_key = None
+        current_map_key = None
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if key == "contact":
+            current_map_key = key
+            data[key] = {}
+        elif value == "":
+            current_list_key = key
+            data[key] = []
+        elif value == "[]":
+            data[key] = []
+        elif value in {"true", "false"}:
+            data[key] = value == "true"
+        elif value == "{}":
+            data[key] = {}
+        else:
+            data[key] = value.strip('"')
+    return data
+
+
+def read_member_page(path: Path) -> Dict[str, object]:
+    content = path.read_text(encoding="utf-8")
+    front_matter = parse_front_matter(content)
+    _, body = split_front_matter(content)
+    front_matter["body"] = body.rstrip()
+    return front_matter
+
+
+def list_value(value: object) -> List[str]:
+    return value if isinstance(value, list) else []
+
+
+def string_value(value: object) -> str:
+    return value if isinstance(value, str) else ""
+
+
+def bool_value(value: object, default: bool = True) -> bool:
+    return value if isinstance(value, bool) else default
+
+
+def contact_value(value: object) -> Dict[str, str]:
+    return value if isinstance(value, dict) else {}
+
+
 def find_member_by_name(root: Path, name: str) -> Optional[Path]:
     for path in sorted((root / "_members").glob("*.md")):
         content = path.read_text(encoding="utf-8")
         if extract_front_matter_value(content, "name") == name:
             return path
     return None
+
+
+def find_member_by_slug(root: Path, slug: str) -> Optional[Path]:
+    if not slug or slug == "不适用":
+        return None
+    path = root / "_members" / f"{slug}.md"
+    return path if path.exists() else None
 
 
 def choose_member_path(root: Path, preferred_slug: str, name: str) -> Path:
@@ -197,26 +283,39 @@ def parse_contact(value: Optional[str]) -> Dict[str, str]:
 
 
 def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) -> SyncResult:
-    name = clean_value(fields.get("姓名"))
+    mode = clean_value(fields.get("提交类型")) or "新增成员"
+    existing_slug = clean_value(fields.get("选择已有成员 slug"))
+    existing_path = find_member_by_slug(root, existing_slug) if mode == "更新成员" else None
+    if mode == "更新成员" and existing_path is None:
+        raise ValueError("更新成员时需要选择一个已有成员 slug。")
+
+    existing = read_member_page(existing_path) if existing_path else {}
+    name = clean_value(fields.get("姓名")) or string_value(existing.get("name"))
     if not name:
         raise ValueError("成员 Issue 缺少姓名。")
-    preferred_slug = slugify(clean_value(fields.get("成员页面文件名 slug")) or name, fallback="member")
-    path = choose_member_path(root, preferred_slug, name)
+    raw_slug = clean_value(fields.get("新成员页面文件名 slug")) or clean_value(fields.get("成员页面文件名 slug"))
+    preferred_slug = slugify(raw_slug or name, fallback="member")
+    path = existing_path or choose_member_path(root, preferred_slug, name)
 
-    topics = lines_to_list(fields.get("研究主题 topics"))
-    research = lines_to_list(fields.get("个人页展示的研究方向")) or topics
-    contact_topics = lines_to_list(fields.get("可交流主题"))
-    contact = parse_contact(fields.get("可公开联系方式"))
-    open_to_contact = clean_value(fields.get("是否愿意公开连接入口")) != "否"
-    status = clean_value(fields.get("状态")) or "其他"
+    submitted_topics = lines_to_list(fields.get("研究主题 topics"))
+    topics = submitted_topics or list_value(existing.get("topics"))
+    submitted_research = lines_to_list(fields.get("个人页展示的研究方向"))
+    research = submitted_research or list_value(existing.get("research")) or topics
+    submitted_contact_topics = lines_to_list(fields.get("可交流主题"))
+    contact_topics = submitted_contact_topics or list_value(existing.get("contact_topics"))
+    submitted_contact = parse_contact(fields.get("可公开联系方式"))
+    contact = submitted_contact or contact_value(existing.get("contact"))
+    submitted_open_to_contact = clean_value(fields.get("是否愿意公开连接入口"))
+    open_to_contact = bool_value(existing.get("open_to_contact")) if not submitted_open_to_contact else submitted_open_to_contact != "否"
+    status = clean_value(fields.get("状态")) or string_value(existing.get("status")) or "其他"
     current = "课题组" if status == "在组" else status
-    body = clean_value(fields.get("个人页正文")) or default_member_body(name, contact_topics)
+    body = clean_value(fields.get("个人页正文")) or string_value(existing.get("body")) or default_member_body(name, contact_topics)
     lines = [
         "---",
         yaml_scalar("name", name),
         yaml_scalar("title", name),
-        yaml_scalar("cohort", clean_value(fields.get("入组或入学年份"))),
-        yaml_scalar("role", clean_value(fields.get("身份"))),
+        yaml_scalar("cohort", clean_value(fields.get("入组或入学年份")) or string_value(existing.get("cohort"))),
+        yaml_scalar("role", clean_value(fields.get("身份")) or string_value(existing.get("role"))),
         yaml_scalar("status", status),
         *yaml_list("research", research),
         *yaml_list("topics", topics),
@@ -232,6 +331,9 @@ def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) ->
         "",
     ]
     path.write_text("\n".join(lines), encoding="utf-8")
+    template_path = root / ".github" / "ISSUE_TEMPLATE" / "member-update.yml"
+    if template_path.exists():
+        update_member_issue_template.update_template(root)
     rel_path = path.relative_to(root).as_posix()
     return SyncResult(rel_path, f"已同步成员信息到 `{rel_path}`。")
 

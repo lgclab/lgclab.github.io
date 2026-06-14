@@ -12,12 +12,14 @@ Issues 页面：[https://github.com/lgclab/lgclab.github.io/issues](https://gith
 
 1. 打开 Issues 页面。
 2. 选择 **新增或更新成员** 模板。
-3. 填写姓名、slug、入学或入组年份、身份、状态、研究主题、可交流话题和可公开联系方式。
+3. 选择提交类型。新增成员时填写新 slug 和公开信息；更新成员时从下拉框选择已有 slug，只填写想修改的字段。
 4. 勾选公开确认后提交。GitHub Actions 会自动写入或更新 `_members/` 下的成员页面。
 
 成员信息请优先由本人提交。代为提交时，需要先确认对方同意公开哪些字段。建议公开 GitHub、个人主页、Google Scholar、ORCID 或经过处理的邮箱，不建议公开手机号、微信号等敏感联系方式。
 
 如果 slug 已经被同名成员使用，系统会更新原页面；如果 slug 已经被不同姓名使用，系统会自动生成 `slug-2`、`slug-3`，避免覆盖他人页面。
+
+更新成员时，留空字段会保留原成员页内容。
 
 ### 提交经验贴
 
@@ -132,6 +134,7 @@ open_to_contact: false
 - `.github/workflows/issue-content-sync.yml`：Issue 创建或编辑后，自动生成或更新成员页和经验贴。
 - `.github/workflows/pages.yml`：GitHub Pages 自动构建和发布流程。
 - `scripts/sync_issue_content.py`：Issue 表单解析和 Markdown 生成逻辑。
+- `scripts/update_member_issue_template.py`：从 `_members/*.md` 生成成员 Issue 表单里的已有 slug 下拉选项。
 - `tests/`：轻量结构测试，防止关键页面、模板和字段被误删。
 
 ## 维护者应该做什么
