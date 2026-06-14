@@ -21,6 +21,8 @@ Issues 页面：[https://github.com/lgclab/lgclab.github.io/issues](https://gith
 
 更新成员时，留空字段会保留原成员页内容。
 
+成员个人页正文有两种填写方式：普通填写可使用“我在做什么”“可交流主题”“个人经验”三个字段；如果已经写好完整 Markdown，可以填写“个人页正文”，它会覆盖自动生成的正文。
+
 ### 提交经验贴
 
 1. 打开 Issues 页面。
@@ -29,6 +31,8 @@ Issues 页面：[https://github.com/lgclab/lgclab.github.io/issues](https://gith
 4. 正文建议包含背景、具体做法、常见坑、推荐资源、后来者可以联系谁。
 
 Issue 提交或编辑后，GitHub Actions 会把内容同步为网站中的 Markdown 文件。经验贴的分类和 tags 会自动写入 `topics`，所以会出现在主题页中。
+
+修改已经发布的经验贴时，请编辑原 Issue。同步脚本会根据 `issue_number` 找到原文章并更新内容，避免重复生成多篇文章。
 
 ## 通过 Pull Request 加入或发帖
 

@@ -39,13 +39,30 @@ layout: default
 
       <h2>公开连接入口</h2>
       <p>
+        {% assign has_direct_contact = false %}
         {% if page.contact.github and page.contact.github != blank %}
           GitHub: <a href="https://github.com/{{ page.contact.github }}">{{ page.contact.github }}</a>
-        {% elsif page.contact.email and page.contact.email != blank %}
-          Email: {{ page.contact.email }}
-        {% else %}
-          可通过维护者转达联系请求。
+          {% assign has_direct_contact = true %}
         {% endif %}
+        {% if page.contact.email and page.contact.email != blank %}
+          Email: {{ page.contact.email }}
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% if page.contact.homepage and page.contact.homepage != blank %}
+          主页: <a href="{{ page.contact.homepage }}">{{ page.contact.homepage }}</a>
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% if page.contact.scholar and page.contact.scholar != blank %}
+          Scholar: <a href="{{ page.contact.scholar }}">{{ page.contact.scholar }}</a>
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% if page.contact.orcid and page.contact.orcid != blank %}
+          ORCID: {{ page.contact.orcid }}
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% unless has_direct_contact %}
+          可通过维护者转达联系请求。
+        {% endunless %}
       </p>
     {% else %}
       <p class="muted-note">该成员暂未公开直接联系方式。</p>

@@ -31,13 +31,30 @@ permalink: /members/
           {% endfor %}
         </ul>
         <p>
+          {% assign has_direct_contact = false %}
           {% if member.contact.github and member.contact.github != blank %}
             GitHub: <a href="https://github.com/{{ member.contact.github }}">{{ member.contact.github }}</a>
-          {% elsif member.contact.email and member.contact.email != blank %}
-            Email: {{ member.contact.email }}
-          {% else %}
-            可通过维护者转达联系请求。
+            {% assign has_direct_contact = true %}
           {% endif %}
+          {% if member.contact.email and member.contact.email != blank %}
+            Email: {{ member.contact.email }}
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% if member.contact.homepage and member.contact.homepage != blank %}
+            主页: <a href="{{ member.contact.homepage }}">{{ member.contact.homepage }}</a>
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% if member.contact.scholar and member.contact.scholar != blank %}
+            Scholar: <a href="{{ member.contact.scholar }}">{{ member.contact.scholar }}</a>
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% if member.contact.orcid and member.contact.orcid != blank %}
+            ORCID: {{ member.contact.orcid }}
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% unless has_direct_contact %}
+            可通过维护者转达联系请求。
+          {% endunless %}
         </p>
       {% endif %}
       <p><a href="{{ member.url | relative_url }}">查看个人页</a></p>
