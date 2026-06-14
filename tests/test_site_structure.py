@@ -120,6 +120,12 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/workflows/pages.yml", "actions/jekyll-build-pages")
         self.assert_file_contains(".github/workflows/pages.yml", "actions/deploy-pages")
 
+    def test_pages_workflow_runs_after_issue_content_sync(self):
+        self.assert_file_contains(".github/workflows/pages.yml", "workflow_run:")
+        self.assert_file_contains(".github/workflows/pages.yml", "Sync issue content")
+        self.assert_file_contains(".github/workflows/pages.yml", "types: [completed]")
+        self.assert_file_contains(".github/workflows/pages.yml", "github.event.workflow_run.conclusion == 'success'")
+
     def test_custom_domain_root_url_is_configured(self):
         self.assert_file_contains("_config.yml", 'url: "https://lgclab.github.io"')
         self.assert_file_contains("_config.yml", 'baseurl: ""')
