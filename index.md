@@ -46,22 +46,75 @@ kicker: "Research Group Knowledge & Connections"
     <h2>按主题进入</h2>
   </div>
 
+  {% assign all_topics = "" | split: "" %}
+  {% for post in site.posts %}
+    {% if post.topics %}
+      {% assign all_topics = all_topics | concat: post.topics %}
+    {% endif %}
+  {% endfor %}
+  {% for member in site.members %}
+    {% if member.topics %}
+      {% assign all_topics = all_topics | concat: member.topics %}
+    {% endif %}
+  {% endfor %}
+  {% assign all_topics = all_topics | uniq %}
+  {% assign topic_entries = "" | split: "" %}
+  {% for topic in all_topics %}
+    {% assign topic_content_count = 0 %}
+    {% for post in site.posts %}
+      {% if post.topics contains topic %}
+        {% assign topic_content_count = topic_content_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    {% for member in site.members %}
+      {% if member.topics contains topic %}
+        {% assign topic_content_count = topic_content_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    {% if topic_content_count < 10 %}
+      {% assign topic_sort_key = topic_content_count | prepend: "000" %}
+    {% elsif topic_content_count < 100 %}
+      {% assign topic_sort_key = topic_content_count | prepend: "00" %}
+    {% elsif topic_content_count < 1000 %}
+      {% assign topic_sort_key = topic_content_count | prepend: "0" %}
+    {% else %}
+      {% assign topic_sort_key = topic_content_count %}
+    {% endif %}
+    {% assign topic_entry = topic_sort_key | append: "||" | append: topic %}
+    {% assign topic_entry_array = topic_entry | split: "^^" %}
+    {% assign topic_entries = topic_entries | concat: topic_entry_array %}
+  {% endfor %}
+  {% assign topic_entries = topic_entries | sort | reverse %}
+
   <div class="section-grid">
-    <a class="card feature-card" href="{{ '/topics/' | relative_url }}">
-      <span class="card-number">01</span>
-      <h3>入组与科研启动</h3>
-      <p>适合新同学快速了解组内工作方式、阅读节奏、开题准备和常见资源。</p>
-    </a>
-    <a class="card feature-card" href="{{ '/posts/' | relative_url }}">
-      <span class="card-number">02</span>
-      <h3>论文、实验与投稿</h3>
-      <p>沉淀论文阅读、实验复现、写作修改、投稿 checklist 和会议经验。</p>
-    </a>
-    <a class="card feature-card" href="{{ '/members/' | relative_url }}">
-      <span class="card-number">03</span>
-      <h3>毕业、实习与去向</h3>
-      <p>整理毕业流程、申博、找实习、求职和 alumni 可交流方向。</p>
-    </a>
+    {% for topic_entry in topic_entries limit: 3 %}
+      {% assign topic_parts = topic_entry | split: "||" %}
+      {% assign topic = topic_parts | last %}
+      {% assign topic_post_count = 0 %}
+      {% assign topic_member_count = 0 %}
+      {% for post in site.posts %}
+        {% if post.topics contains topic %}
+          {% assign topic_post_count = topic_post_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {% for member in site.members %}
+        {% if member.topics contains topic %}
+          {% assign topic_member_count = topic_member_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {% assign topic_content_count = topic_post_count | plus: topic_member_count %}
+      <a class="card feature-card" href="{{ '/topics/' | relative_url }}">
+        <span class="card-number">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+        <h3>{{ topic }}</h3>
+        <p>{{ topic_content_count }} 条相关内容：{{ topic_post_count }} 篇经验贴，{{ topic_member_count }} 位成员。</p>
+      </a>
+    {% else %}
+      <a class="card feature-card" href="{{ '/topics/' | relative_url }}">
+        <span class="card-number">01</span>
+        <h3>暂无主题</h3>
+        <p>在经验贴或成员页 front matter 中添加 topics 字段后，这里会自动显示最丰富的主题。</p>
+      </a>
+    {% endfor %}
   </div>
 </section>
 

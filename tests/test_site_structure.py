@@ -75,6 +75,13 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains("topics.md", "member.topics")
         self.assert_file_contains("topics.md", "all_topics")
 
+    def test_homepage_surfaces_top_three_topics_by_content_count(self):
+        self.assert_file_contains("index.md", "按主题进入")
+        self.assert_file_contains("index.md", "topic_entries")
+        self.assert_file_contains("index.md", "topic_content_count")
+        self.assert_file_contains("index.md", "limit: 3")
+        self.assert_file_contains("index.md", "相关内容")
+
     def test_member_issue_template_collects_profile_page_fields(self):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "_members/")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "slug")
