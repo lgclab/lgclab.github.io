@@ -29,6 +29,7 @@ body:
         # member-slug-options:start
         - 不适用
         - li-si
+        - wang-wu
         - zhang-san
         # member-slug-options:end
   - type: input
