@@ -7,6 +7,11 @@ baseurl: ""
 
 permalink: /posts/:year/:month/:day/:title/
 
+collections:
+  members:
+    output: true
+    permalink: /members/:name/
+
 defaults:
   - scope:
       path: ""
@@ -17,6 +22,11 @@ defaults:
       type: posts
     values:
       layout: post
+  - scope:
+      path: ""
+      type: members
+    values:
+      layout: member
 
 exclude:
   - docs/superpowers/

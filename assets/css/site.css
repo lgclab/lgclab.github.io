@@ -396,6 +396,10 @@ h3 {
   max-width: 780px;
 }
 
+.muted-note {
+  color: var(--muted);
+}
+
 .connection-band {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

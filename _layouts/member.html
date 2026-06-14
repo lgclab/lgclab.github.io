@@ -1,0 +1,54 @@
+---
+layout: default
+---
+
+<article class="post member-profile">
+  <header class="post-header">
+    <p class="eyebrow">{{ page.status | default: "成员" }}</p>
+    <h1>{{ page.name | default: page.title }}</h1>
+    <div class="post-meta">
+      {% if page.cohort %}<span>{{ page.cohort }} 级</span>{% endif %}
+      {% if page.role %}<span>{{ page.role }}</span>{% endif %}
+      {% if page.current %}<span>{{ page.current }}</span>{% endif %}
+    </div>
+    {% if page.research %}
+      <div class="tag-list">
+        {% for item in page.research %}
+          <span class="tag">{{ item }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="content">
+    {% if page.note %}
+      <p class="lede">{{ page.note }}</p>
+    {% endif %}
+
+    {{ content }}
+
+    {% if page.open_to_contact %}
+      <h2>可以找我聊</h2>
+      {% if page.contact_topics %}
+        <ul>
+          {% for topic in page.contact_topics %}
+            <li>{{ topic }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <h2>公开连接入口</h2>
+      <p>
+        {% if page.contact.github %}
+          GitHub: <a href="https://github.com/{{ page.contact.github }}">{{ page.contact.github }}</a>
+        {% elsif page.contact.email %}
+          Email: {{ page.contact.email }}
+        {% else %}
+          可通过维护者转达联系请求。
+        {% endif %}
+      </p>
+    {% else %}
+      <p class="muted-note">该成员暂未公开直接联系方式。</p>
+    {% endif %}
+  </div>
+</article>

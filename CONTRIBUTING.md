@@ -18,6 +18,9 @@ title: "文章标题"
 author: "作者姓名"
 date: 2026-06-13
 category: "入组指南"
+topics:
+  - "科研启动"
+  - "论文阅读"
 tags:
   - "新人"
   - "论文阅读"
@@ -43,7 +46,35 @@ audience: "新入组同学"
 
 ## 更新成员信息
 
-成员信息在 `_data/members.yml` 中维护。请只提交本人同意公开的信息。建议公开 GitHub、个人主页、Google Scholar、ORCID 或经过处理的邮箱，不建议公开手机号、微信号等敏感联系方式。
+成员信息在 `_members/` 中维护。每位成员一个 Markdown 文件，例如：
+
+```text
+_members/zhang-san.md
+```
+
+文件开头使用 front matter 保存可汇总的信息，正文可以写普通 Markdown：
+
+```yaml
+---
+name: "张三"
+cohort: "2024"
+role: "硕士"
+status: "在组"
+research:
+  - "多智能体系统"
+topics:
+  - "多智能体系统"
+  - "强化学习"
+open_to_contact: true
+contact_topics:
+  - "入组前三个月怎么启动"
+contact:
+  github: "example-student"
+  email: "name [at] example.com"
+---
+```
+
+请只提交本人同意公开的信息。建议公开 GitHub、个人主页、Google Scholar、ORCID 或经过处理的邮箱，不建议公开手机号、微信号等敏感联系方式。
 
 如果成员不想被直接联系，请设置：
 
@@ -53,13 +84,12 @@ open_to_contact: false
 
 ## 更新研究方向
 
-研究方向在 `_data/topics.yml` 中维护。每个方向可以关联经验贴和成员：
+研究方向页不再单独维护。网站会自动汇总 `_posts/` 和 `_members/` 中的 `topics` 字段：
 
 ```yaml
-related_posts:
-  - "welcome-to-the-lab"
-related_members:
-  - "张三"
+topics:
+  - "多智能体系统"
+  - "强化学习"
 ```
 
-`related_posts` 使用文章 slug，一般来自 `_posts/YYYY-MM-DD-slug.md` 的 `slug` 部分。
+如果某个主题同时出现在经验贴和成员页中，它会自动归到同一个主题下。`tags` 可以继续用于文章标签；`topics` 用于研究方向和主题索引。

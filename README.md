@@ -13,9 +13,9 @@
 
 新增经验贴：在 `_posts/` 中新增 `YYYY-MM-DD-title.md` 文件，并填写 front matter。
 
-更新成员：编辑 `_data/members.yml`。
+更新成员：在 `_members/` 中新增或编辑对应成员的 Markdown 文件。
 
-更新研究方向：编辑 `_data/topics.yml`。
+更新研究方向：在经验贴或成员页 front matter 中填写 `topics`，`topics.md` 会自动汇总。
 
 ## 发布
 

@@ -1,42 +1,54 @@
 ---
 title: "研究方向"
 permalink: /topics/
-summary: "从研究问题进入资料和人：每个方向都连接相关经验贴、当前成员和可联系的毕业成员。"
+summary: "由经验贴和成员页中的 topics 字段自动汇总，帮助同学从主题进入资料和人。"
 ---
 
-{% for topic in site.data.topics %}
+{% assign all_topics = "" | split: "" %}
+{% for post in site.posts %}
+  {% if post.topics %}
+    {% assign all_topics = all_topics | concat: post.topics %}
+  {% endif %}
+{% endfor %}
+{% for member in site.members %}
+  {% if member.topics %}
+    {% assign all_topics = all_topics | concat: member.topics %}
+  {% endif %}
+{% endfor %}
+{% assign all_topics = all_topics | uniq | sort %}
+
+{% for topic in all_topics %}
   <section class="card">
-    <h2>{{ topic.name }}</h2>
-    <p>{{ topic.description }}</p>
+    <h2>{{ topic }}</h2>
 
-    {% if topic.keywords %}
-      <div class="tag-list">
-        {% for keyword in topic.keywords %}
-          <span class="tag">{{ keyword }}</span>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <h3>相关经验贴</h3>
+    <ul>
+      {% assign has_posts = false %}
+      {% for post in site.posts %}
+        {% if post.topics contains topic %}
+          {% assign has_posts = true %}
+          <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a>{% if post.author %}，{{ post.author }}{% endif %}</li>
+        {% endif %}
+      {% endfor %}
+      {% unless has_posts %}
+        <li>暂无相关经验贴。</li>
+      {% endunless %}
+    </ul>
 
-    {% if topic.related_posts %}
-      <h3>相关经验贴</h3>
-      <ul>
-        {% for post in site.posts %}
-          {% if topic.related_posts contains post.slug %}
-            <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    {% if topic.related_members %}
-      <h3>可交流成员</h3>
-      <ul>
-        {% for member in site.data.members %}
-          {% if topic.related_members contains member.name %}
-            <li>{{ member.name }}{% if member.status %}，{{ member.status }}{% endif %}{% if member.open_to_contact %}，可联系{% endif %}</li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
+    <h3>相关成员</h3>
+    <ul>
+      {% assign has_members = false %}
+      {% for member in site.members %}
+        {% if member.topics contains topic %}
+          {% assign has_members = true %}
+          <li><a href="{{ member.url | relative_url }}">{{ member.name }}</a>{% if member.status %}，{{ member.status }}{% endif %}{% if member.open_to_contact %}，可联系{% endif %}</li>
+        {% endif %}
+      {% endfor %}
+      {% unless has_members %}
+        <li>暂无相关成员。</li>
+      {% endunless %}
+    </ul>
   </section>
+{% else %}
+  <p>还没有可汇总的主题。请在经验贴或成员页 front matter 中添加 topics 字段。</p>
 {% endfor %}

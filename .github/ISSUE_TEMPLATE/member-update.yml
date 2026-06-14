@@ -1,10 +1,15 @@
-name: 更新成员信息
-description: 新增或修改成员页面中的公开信息
-title: "[成员信息] "
+name: 新增或更新成员
+description: 提交公开信息，由维护者新增或修改 _members/ 下的成员 Markdown 页面
+title: "[成员] "
 labels:
   - content
   - member-update
 body:
+  - type: markdown
+    attributes:
+      value: |
+        这个表单用于新增或更新成员页。维护者会根据这些信息创建或修改 `_members/<slug>.md`。
+        请只填写本人同意公开的信息；不要填写手机号、微信号等敏感联系方式。
   - type: input
     id: name
     attributes:
@@ -13,10 +18,23 @@ body:
     validations:
       required: true
   - type: input
+    id: slug
+    attributes:
+      label: 成员页面文件名 slug
+      description: 用小写英文、数字和连字符；维护者会保存为 _members/<slug>.md
+      placeholder: 例如：zhang-san
+    validations:
+      required: true
+  - type: input
     id: cohort
     attributes:
       label: 入组或入学年份
       placeholder: 例如：2024
+  - type: input
+    id: role
+    attributes:
+      label: 身份
+      placeholder: 例如：硕士、博士、本科生、访问学生、校友
   - type: dropdown
     id: status
     attributes:
@@ -28,15 +46,32 @@ body:
     validations:
       required: true
   - type: textarea
+    id: topics
+    attributes:
+      label: 研究主题 topics
+      description: 每行一个。网站会用这些 topics 自动生成研究方向页。
+      placeholder: |
+        多智能体系统
+        强化学习
+    validations:
+      required: true
+  - type: textarea
     id: research
     attributes:
-      label: 研究方向关键词
-      placeholder: 例如：多智能体系统、强化学习、机器学习系统
+      label: 个人页展示的研究方向
+      description: 可以和 topics 相同，也可以更口语化。
+      placeholder: |
+        多智能体系统
+        强化学习
   - type: textarea
     id: contact_topics
     attributes:
       label: 可交流主题
-      placeholder: 例如：开题准备、论文投稿、毕业流程、实习求职
+      placeholder: |
+        开题准备
+        论文投稿
+        毕业流程
+        实习求职
   - type: dropdown
     id: open_to_contact
     attributes:
@@ -51,7 +86,20 @@ body:
     attributes:
       label: 可公开联系方式
       description: 建议填写 GitHub、个人主页、学术主页或经过处理的邮箱；不要填写手机号、微信号等敏感信息
-      placeholder: 例如：GitHub: example-student
+      placeholder: |
+        GitHub: example-student
+        Email: name [at] example.com
+  - type: textarea
+    id: profile_body
+    attributes:
+      label: 个人页正文
+      description: 可以直接写 Markdown，维护者会放到成员页正文中。
+      placeholder: |
+        ## 我在做什么
+
+        ## 可以找我聊什么
+
+        ## 个人经验
   - type: checkboxes
     id: consent
     attributes:
