@@ -1,5 +1,5 @@
 ---
-title: "关于lgclab"
+title: "关于廖总全🌍后援会"
 permalink: /about/
 ---
 
