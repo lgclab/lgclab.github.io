@@ -1,15 +1,15 @@
 ---
 layout: default
-title: "课题组知识与连接站"
-summary: "沉淀经验贴，帮助后来同学少走弯路；连接在组成员与毕业成员，让问题能找到合适的人。"
+title: "廖总全🌍后援会"
+summary: "廖老板的研究生学生交流平台：沉淀经验，减少踩坑；连接同门，促进交流。"
 kicker: "Research Group Knowledge & Connections"
 ---
 
 <section class="hero-panel">
   <div class="hero-copy">
     <p class="hero-kicker">Research Group Knowledge & Connections</p>
-    <h1 class="hero-title">课题组知识与连接站</h1>
-    <p class="hero-summary">沉淀经验贴，帮助后来同学少走弯路；连接在组成员与毕业成员，让问题能找到合适的人。</p>
+    <h1 class="hero-title">廖总全🌍后援会</h1>
+    <p class="hero-summary">廖老板的研究生学生交流平台：沉淀经验，减少踩坑；连接同门，促进交流。</p>
     <div class="hero-actions">
       <a class="button" href="{{ '/posts/' | relative_url }}">看经验贴</a>
       <a class="button secondary" href="{{ '/members/' | relative_url }}">找成员</a>
