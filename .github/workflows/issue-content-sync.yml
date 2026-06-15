@@ -22,7 +22,7 @@ jobs:
       - name: Commit content changes
         id: commit
         run: |
-          if git diff --quiet -- _members _posts .github/ISSUE_TEMPLATE/member-update.yml; then
+          if git diff --quiet -- _members _posts .github/ISSUE_TEMPLATE/member-update.yml && [ -z "$(git status --porcelain -- _members _posts .github/ISSUE_TEMPLATE/member-update.yml)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi

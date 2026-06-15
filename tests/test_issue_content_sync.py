@@ -277,6 +277,29 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertIn("tags:\n  - \"开题\"\n  - \"选题\"\n  - \"文献阅读\"", content)
             self.assertIn("topics:\n  - \"开题复盘\"\n  - \"开题\"\n  - \"选题\"\n  - \"文献阅读\"", content)
 
+    def test_post_issue_uses_pinyin_slug_for_test_title(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            issue = {
+                "number": 5,
+                "title": "[经验贴] 测试贴",
+                "body": form_body(
+                    [
+                        ("标题", "测试"),
+                        ("作者", "刘倍延"),
+                        ("分类", "投稿经验"),
+                        ("标签 tags", "_No response_"),
+                        ("适合谁读", "_No response_"),
+                        ("正文", "你好"),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-15")
+
+            self.assertEqual(result.changed_path, "_posts/2026-06-15-ce-shi.md")
+            self.assertTrue((root / result.changed_path).is_file())
+
     def test_member_issue_template_dropdown_is_generated_from_member_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

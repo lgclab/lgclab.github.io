@@ -112,6 +112,7 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/workflows/issue-content-sync.yml", "scripts/sync_issue_content.py")
         self.assert_file_contains(".github/workflows/issue-content-sync.yml", "issues: write")
         self.assert_file_contains(".github/workflows/issue-content-sync.yml", "contents: write")
+        self.assert_file_contains(".github/workflows/issue-content-sync.yml", "git status --porcelain")
 
     def test_contribution_and_deployment_files_exist(self):
         for relative_path in [
