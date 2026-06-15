@@ -71,7 +71,7 @@ class SiteStructureTest(unittest.TestCase):
 
     def test_topics_are_aggregated_from_posts_and_members(self):
         self.assertFalse((ROOT / "_data/topics.yml").exists())
-        self.assert_file_contains("_posts/2026-06-13-welcome-to-the-lab.md", "topics:")
+        self.assert_file_contains("_posts/2026-06-15-zu.md", "topics:")
         self.assert_file_contains("topics.md", "post.topics")
         self.assert_file_contains("topics.md", "member.topics")
         self.assert_file_contains("topics.md", "all_topics")

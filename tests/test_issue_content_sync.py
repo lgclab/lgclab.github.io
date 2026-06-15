@@ -300,6 +300,37 @@ class IssueContentSyncTest(unittest.TestCase):
             self.assertEqual(result.changed_path, "_posts/2026-06-15-ce-shi.md")
             self.assertTrue((root / result.changed_path).is_file())
 
+    def test_post_issue_preserves_markdown_h3_headings_in_body(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            issue = {
+                "number": 7,
+                "title": "[经验贴] 廖老板小组生存指南",
+                "body": form_body(
+                    [
+                        ("标题", "廖老板小组生存指南"),
+                        ("作者", "刘倍延"),
+                        ("分类", "组内指南"),
+                        ("标签 tags", "组内指南"),
+                        ("适合谁读", "新入组同学"),
+                        (
+                            "正文",
+                            "## 组会和论文分享\n\n我们组的组会包括两部分。\n\n### 组会\n\n- 保持诚实。\n\n### 标题\n\n这个小标题不应被误判成表单字段。\n\n### 论文分享\n\n- 每个人都要提问。",
+                        ),
+                    ]
+                ),
+            }
+
+            result = sync_issue_content.sync_issue(root, issue, today="2026-06-15")
+
+            content = (root / result.changed_path).read_text(encoding="utf-8")
+            self.assertIn("### 组会", content)
+            self.assertIn("- 保持诚实。", content)
+            self.assertIn("### 标题", content)
+            self.assertIn("这个小标题不应被误判成表单字段。", content)
+            self.assertIn("### 论文分享", content)
+            self.assertIn("- 每个人都要提问。", content)
+
     def test_member_issue_template_dropdown_is_generated_from_member_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

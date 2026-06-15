@@ -20,6 +20,47 @@ except ModuleNotFoundError:
 
 
 NO_RESPONSE = "_No response_"
+MEMBER_FORM_LABELS = [
+    "提交类型",
+    "选择已有成员 slug",
+    "姓名",
+    "新成员页面文件名 slug",
+    "成员页面文件名 slug",
+    "入组或入学年份",
+    "身份",
+    "状态",
+    "研究主题 topics",
+    "个人页展示的研究方向",
+    "我在做什么",
+    "可交流主题",
+    "个人经验",
+    "是否愿意公开连接入口",
+    "可公开联系方式",
+    "个人页正文",
+    "公开确认",
+]
+POST_FORM_LABELS = [
+    "标题",
+    "作者",
+    "分类",
+    "标签 tags",
+    "适合谁读",
+    "正文",
+]
+ISSUE_FORM_LABELS = set(MEMBER_FORM_LABELS + POST_FORM_LABELS)
+
+
+def issue_form_label_order(body: str) -> Dict[str, int]:
+    for line in body.splitlines():
+        match = re.match(r"^###\s+(.+?)\s*$", line)
+        if not match:
+            continue
+        label = match.group(1).strip()
+        if label in MEMBER_FORM_LABELS:
+            return {field: index for index, field in enumerate(MEMBER_FORM_LABELS)}
+        if label in POST_FORM_LABELS:
+            return {field: index for index, field in enumerate(POST_FORM_LABELS)}
+    return {field: index for index, field in enumerate(MEMBER_FORM_LABELS + POST_FORM_LABELS)}
 
 
 @dataclass
@@ -29,15 +70,20 @@ class SyncResult:
 
 
 def parse_issue_form(body: str) -> Dict[str, str]:
+    label_order = issue_form_label_order(body)
     fields: Dict[str, str] = {}
     current_label: Optional[str] = None
     current_lines: List[str] = []
+    current_index = -1
     for line in body.splitlines():
         match = re.match(r"^###\s+(.+?)\s*$", line)
-        if match:
+        label = match.group(1).strip() if match else ""
+        is_next_field = label in ISSUE_FORM_LABELS and label_order.get(label, -1) > current_index
+        if match and is_next_field:
             if current_label is not None:
                 fields[current_label] = "\n".join(current_lines).strip()
-            current_label = match.group(1).strip()
+            current_label = label
+            current_index = label_order[label]
             current_lines = []
         else:
             current_lines.append(line)
