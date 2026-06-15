@@ -15,6 +15,8 @@ This document records the intended GitHub Issue workflows for maintainers. It is
 
 ## Findings And Fixes
 
-- Public contact parsing already accepted `GitHub`, `Email`, `Homepage`, `Scholar`, and `ORCID`, but the member list and member profile layout only displayed GitHub or Email. The layouts now render all supported public contact fields.
+- Public contact parsing accepts `GitHub`, `Email`, `Homepage`, `Scholar`, `ORCID`, `WeChat`, and `Substack`. The member list and member profile layout render all supported public contact fields.
 - README and CONTRIBUTING did not describe the newer member profile section fields. They now describe `我在做什么`, `可交流主题`, `个人经验`, and the full Markdown override field.
 - README and CONTRIBUTING now state that editing the original experience-post issue updates the existing article through `issue_number`.
+- Member cards and member profile headers now display green tags from `topics`, while `个人页展示的研究方向` is rendered in the personal page body as a Markdown section.
+- Directly deleting `_members/*.md` is covered by a member-template sync workflow so removed slugs do not remain in the member update issue dropdown.

@@ -11,9 +11,9 @@ layout: default
       {% if page.role %}<span>{{ page.role }}</span>{% endif %}
       {% if page.current %}<span>{{ page.current }}</span>{% endif %}
     </div>
-    {% if page.research %}
+    {% if page.topics %}
       <div class="tag-list">
-        {% for item in page.research %}
+        {% for item in page.topics %}
           <span class="tag">{{ item }}</span>
         {% endfor %}
       </div>
@@ -58,6 +58,14 @@ layout: default
         {% endif %}
         {% if page.contact.orcid and page.contact.orcid != blank %}
           ORCID: {{ page.contact.orcid }}
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% if page.contact.wechat and page.contact.wechat != blank %}
+          WeChat: {{ page.contact.wechat }}
+          {% assign has_direct_contact = true %}
+        {% endif %}
+        {% if page.contact.substack and page.contact.substack != blank %}
+          Substack: <a href="{{ page.contact.substack }}">{{ page.contact.substack }}</a>
           {% assign has_direct_contact = true %}
         {% endif %}
         {% unless has_direct_contact %}

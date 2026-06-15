@@ -16,9 +16,9 @@ permalink: /members/
         {% if member.status %}<span>{{ member.status }}</span>{% endif %}
         {% if member.current %}<span>{{ member.current }}</span>{% endif %}
       </div>
-      {% if member.research %}
+      {% if member.topics %}
         <div class="tag-list">
-          {% for item in member.research %}
+          {% for item in member.topics %}
             <span class="tag">{{ item }}</span>
           {% endfor %}
         </div>
@@ -50,6 +50,14 @@ permalink: /members/
           {% endif %}
           {% if member.contact.orcid and member.contact.orcid != blank %}
             ORCID: {{ member.contact.orcid }}
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% if member.contact.wechat and member.contact.wechat != blank %}
+            WeChat: {{ member.contact.wechat }}
+            {% assign has_direct_contact = true %}
+          {% endif %}
+          {% if member.contact.substack and member.contact.substack != blank %}
+            Substack: <a href="{{ member.contact.substack }}">{{ member.contact.substack }}</a>
             {% assign has_direct_contact = true %}
           {% endif %}
           {% unless has_direct_contact %}

@@ -55,10 +55,11 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains("_config.yml", "permalink: /members/:name/")
         self.assert_file_contains("members.md", "site.members")
         self.assert_file_contains("members.md", "member.url")
-        self.assert_file_contains("_members/zhang-san.md", "open_to_contact")
-        self.assert_file_contains("_members/zhang-san.md", "contact_topics")
-        self.assert_file_contains("_members/zhang-san.md", "topics:")
-        self.assert_file_contains("_members/zhang-san.md", "## 我在做什么")
+        self.assert_file_contains("_members/liu-beiyan.md", "open_to_contact")
+        self.assert_file_contains("_members/liu-beiyan.md", "contact_topics")
+        self.assert_file_contains("_members/liu-beiyan.md", "topics:")
+        self.assert_file_contains("_members/liu-beiyan.md", "## 研究方向")
+        self.assert_file_contains("_members/liu-beiyan.md", "## 我在做什么")
         self.assert_file_contains("_layouts/member.html", "page.contact_topics")
 
     def test_members_page_uses_one_unified_member_list(self):
@@ -88,11 +89,18 @@ class SiteStructureTest(unittest.TestCase):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "提交类型")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "选择已有成员 slug")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "member-slug-options:start")
-        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "zhang-san")
-        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "li-si")
+        self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "liu-beiyan")
+        self.assert_file_not_contains(".github/ISSUE_TEMPLATE/member-update.yml", "        - zhang-san")
+        self.assert_file_not_contains(".github/ISSUE_TEMPLATE/member-update.yml", "        - li-si")
+        self.assert_file_not_contains(".github/ISSUE_TEMPLATE/member-update.yml", "        - wang-wu")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "研究主题")
         self.assert_file_contains(".github/ISSUE_TEMPLATE/member-update.yml", "个人页正文")
         self.assert_file_contains("scripts/update_member_issue_template.py", "update_template")
+
+    def test_member_template_workflow_updates_deleted_member_slugs(self):
+        self.assert_file_contains(".github/workflows/member-template-sync.yml", "_members/**")
+        self.assert_file_contains(".github/workflows/member-template-sync.yml", "scripts/update_member_issue_template.py")
+        self.assert_file_contains(".github/workflows/member-template-sync.yml", ".github/ISSUE_TEMPLATE/member-update.yml")
 
     def test_experience_issue_template_supports_custom_category_and_tags(self):
         self.assert_file_contains(".github/ISSUE_TEMPLATE/experience-post.yml", "type: input")

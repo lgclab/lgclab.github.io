@@ -385,11 +385,25 @@ h3 {
   border-radius: 8px;
   padding: 22px;
   box-shadow: 0 10px 30px rgba(31, 39, 35, 0.05);
+  overflow: hidden;
 }
 
 .member-card ul {
   margin: 10px 0 0;
   padding-left: 18px;
+}
+
+.member-card p {
+  overflow-wrap: anywhere;
+}
+
+.member-card .tag-list {
+  margin-top: 16px;
+}
+
+.member-card .tag {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .content {

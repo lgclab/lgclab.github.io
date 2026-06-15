@@ -10,7 +10,7 @@ body:
       value: |
         这个表单用于新增或更新成员页。新增成员时填写新 slug；更新成员时从下拉框选择已有 slug。
         更新时只需要填写想修改的字段，留空字段会保留原成员页内容。
-        请只填写本人同意公开的信息；不要填写手机号、微信号等敏感联系方式。
+        请只填写本人同意公开的信息；手机号、微信号等敏感联系方式仅限本人明确同意公开时填写。
   - type: dropdown
     id: mode
     attributes:
@@ -28,10 +28,7 @@ body:
       options:
         # member-slug-options:start
         - 不适用
-        - li-si
         - liu-beiyan
-        - wang-wu
-        - zhang-san
         # member-slug-options:end
   - type: input
     id: name
@@ -115,10 +112,12 @@ body:
     id: public_contact
     attributes:
       label: 可公开联系方式
-      description: 建议填写 GitHub、个人主页、学术主页或经过处理的邮箱；不要填写手机号、微信号等敏感信息
+      description: 建议填写 GitHub、个人主页、学术主页、Substack 或经过处理的邮箱；微信等敏感联系方式仅限本人明确同意公开时填写。
       placeholder: |
         GitHub: example-student
         Email: name [at] example.com
+        WeChat: example-wechat-id
+        Substack: example.substack.com
   - type: textarea
     id: profile_body
     attributes:

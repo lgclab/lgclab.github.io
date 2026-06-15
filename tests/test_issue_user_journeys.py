@@ -86,14 +86,14 @@ class IssueUserJourneyTest(unittest.TestCase):
                     ("身份", "博士"),
                     ("状态", "在组"),
                     ("研究主题 topics", "多智能体系统\n强化学习"),
-                    ("个人页展示的研究方向", "多智能体协作"),
+                    ("个人页展示的研究方向", "多智能体协作\nAgent Context Infrastructure"),
                     ("我在做什么", "研究多智能体协作中的信用分配。"),
                     ("可交流主题", "开题准备\n实验复现"),
                     ("个人经验", "刚入组时先跑通一个 baseline。"),
                     ("是否愿意公开连接入口", "是"),
                     (
                         "可公开联系方式",
-                        "GitHub: chen-lab\nHomepage: https://chen.example.com\nScholar: https://scholar.example.com/chen\nORCID: 0000-0000-0000-0001",
+                        "Github: [@chen-lab](github.com/chen-lab)\nHomepage: https://chen.example.com\nScholar: https://scholar.example.com/chen\nORCID: 0000-0000-0000-0001\nWeChat: chen-lab\nSubstack: [chen.substack.com](chen.substack.com)",
                     ),
                     ("个人页正文", "_No response_"),
                 ]
@@ -111,10 +111,16 @@ class IssueUserJourneyTest(unittest.TestCase):
         self.assertIn('  - "多智能体系统"', member_content)
         self.assertIn('  - "强化学习"', member_content)
         self.assertIn('  - "多智能体协作"', member_content)
+        self.assertIn('  - "Agent Context Infrastructure"', member_content)
         self.assertIn('github: "chen-lab"', member_content)
         self.assertIn('homepage: "https://chen.example.com"', member_content)
         self.assertIn('scholar: "https://scholar.example.com/chen"', member_content)
         self.assertIn('orcid: "0000-0000-0000-0001"', member_content)
+        self.assertIn('wechat: "chen-lab"', member_content)
+        self.assertIn('substack: "https://chen.substack.com"', member_content)
+        self.assertIn("## 研究方向", member_content)
+        self.assertIn("- 多智能体协作", member_content)
+        self.assertIn("- Agent Context Infrastructure", member_content)
         self.assertIn("研究多智能体协作中的信用分配。", member_content)
         self.assertIn("- 开题准备", member_content)
         self.assertIn("刚入组时先跑通一个 baseline。", member_content)
@@ -127,15 +133,61 @@ class IssueUserJourneyTest(unittest.TestCase):
         topics_page = read(ROOT / "topics.md")
         self.assertIn("site.members", members_page)
         self.assertIn("member.url", members_page)
-        self.assertIn("member.research", members_page)
+        self.assertIn("member.topics", members_page)
+        self.assertNotIn("member.research", members_page)
         self.assertIn("member.contact_topics", members_page)
         self.assertIn("member.contact.homepage", members_page)
         self.assertIn("member.contact.scholar", members_page)
         self.assertIn("member.contact.orcid", members_page)
+        self.assertIn("member.contact.wechat", members_page)
+        self.assertIn("member.contact.substack", members_page)
         self.assertIn("{{ content }}", member_layout)
+        self.assertIn("page.topics", member_layout)
+        self.assertNotIn("page.research", member_layout)
         self.assertIn("page.contact.homepage", member_layout)
         self.assertIn("page.contact.scholar", member_layout)
         self.assertIn("page.contact.orcid", member_layout)
+        self.assertIn("page.contact.wechat", member_layout)
+        self.assertIn("page.contact.substack", member_layout)
+        self.assertIn("member.topics", topics_page)
+        self.assertIn("member.url", topics_page)
+
+    def test_deleted_member_does_not_leave_stale_theme_or_dropdown_entries(self):
+        root = self.make_root()
+        self.write_existing_member(root, slug="zhang-san")
+        template = root / ".github" / "ISSUE_TEMPLATE" / "member-update.yml"
+        template.write_text(
+            "\n".join(
+                [
+                    "body:",
+                    "  - type: dropdown",
+                    "    id: existing_slug",
+                    "    attributes:",
+                    "      label: 选择已有成员 slug",
+                    "      options:",
+                    "        # member-slug-options:start",
+                    "        - 不适用",
+                    "        - zhang-san",
+                    "        # member-slug-options:end",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
+        (root / "_members" / "zhang-san.md").unlink()
+        from scripts import update_member_issue_template
+
+        update_member_issue_template.update_template(root)
+
+        generated_template = read(template)
+        self.assertNotIn("zhang-san", generated_template)
+
+        workflow = read(ROOT / ".github" / "workflows" / "member-template-sync.yml")
+        self.assertIn("_members/**", workflow)
+        self.assertIn("scripts/update_member_issue_template.py", workflow)
+
+        topics_page = read(ROOT / "topics.md")
+        self.assertIn("site.members", topics_page)
         self.assertIn("member.topics", topics_page)
         self.assertIn("member.url", topics_page)
 

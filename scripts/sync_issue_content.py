@@ -98,7 +98,8 @@ def yaml_list(key: str, values: List[str]) -> List[str]:
 
 
 def yaml_contact(contact: Dict[str, str]) -> List[str]:
-    entries = [(key, contact.get(key, "")) for key in ["github", "email", "homepage", "scholar", "orcid"]]
+    contact_keys = ["github", "email", "homepage", "scholar", "orcid", "wechat", "substack"]
+    entries = [(key, contact.get(key, "")) for key in contact_keys]
     entries = [(key, value) for key, value in entries if value]
     if not entries:
         return ["contact: {}"]
@@ -291,10 +292,30 @@ def parse_contact(value: Optional[str]) -> Dict[str, str]:
             continue
         key, raw_value = line.split(":", 1)
         normalized_key = key.strip().lower()
-        normalized_value = raw_value.strip()
-        if normalized_key in {"github", "email", "homepage", "scholar", "orcid"} and normalized_value:
+        normalized_value = normalize_contact_value(normalized_key, raw_value.strip())
+        if normalized_key in {"github", "email", "homepage", "scholar", "orcid", "wechat", "substack"} and normalized_value:
             contact[normalized_key] = normalized_value
     return contact
+
+
+def normalize_contact_value(key: str, value: str) -> str:
+    markdown_link = re.match(r"^\[([^\]]+)\]\(([^)]+)\)$", value)
+    if markdown_link:
+        label, url = markdown_link.groups()
+        value = label if key in {"github", "wechat", "orcid"} else url
+
+    if key == "github":
+        value = value.strip().removeprefix("@")
+        value = re.sub(r"^https?://github\.com/", "", value)
+        value = re.sub(r"^github\.com/", "", value)
+        return value.strip("/")
+
+    if key in {"homepage", "scholar", "substack"}:
+        if value and not re.match(r"^https?://", value):
+            value = "https://" + value
+        return value
+
+    return value
 
 
 def sync_member(root: Path, issue: Dict[str, object], fields: Dict[str, str]) -> SyncResult:
@@ -369,7 +390,7 @@ def is_generated_member_body(body: str) -> bool:
     if not all(heading in body for heading in required_headings):
         return False
     generated_phrases = ["这里可以补充", "- 可以补充可交流主题。"]
-    return any(phrase in body for phrase in generated_phrases)
+    return any(phrase in body for phrase in generated_phrases) or "## 研究方向" in body
 
 
 def default_member_body(
@@ -379,13 +400,23 @@ def default_member_body(
     about: str = "",
     experience: str = "",
 ) -> str:
+    sections: List[str] = []
+    if research:
+        sections.extend(
+            [
+                "## 研究方向",
+                "",
+                markdown_list(research, ""),
+                "",
+            ]
+        )
     about_text = about or markdown_list(
         research,
         f"这里可以补充{name}目前的研究方向、项目经历或正在关注的问题。",
     )
     topics = markdown_list(contact_topics, "- 可以补充可交流主题。")
     experience_text = experience or "这里可以补充希望后来同学提前知道的经验。"
-    return "\n".join(
+    sections.extend(
         [
             "## 我在做什么",
             "",
@@ -400,6 +431,7 @@ def default_member_body(
             experience_text,
         ]
     )
+    return "\n".join(sections)
 
 
 def find_post_by_issue_number(root: Path, issue_number: object) -> Optional[Path]:
